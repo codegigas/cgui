@@ -1,0 +1,31 @@
+{
+    "exclude": ["node_modules/*"],
+    "compilerOptions": {
+        /* Type Checking */
+        "strict": true,
+        
+        /* Interop Constraints */
+        "esModuleInterop": true,
+
+        /* Modules */
+        "module": "ES2022",
+        "moduleResolution": "Bundler",
+        "resolveJsonModule": true,
+        "paths": {
+            "@/*": ["./src/*"],
+            "@core/*": ["./src/app/core/*"],
+            "@modules/*": ["./src/app/modules/*"],
+            "@shared/*": ["./src/app/shared/*"]
+        },
+        
+        /* Language and Environment */
+        "target": "ES2022",
+        "jsx": "react-jsx",
+
+        /* Emit */
+        "noEmit": true,
+        
+        /* Completeness */
+        "skipLibCheck": true 
+    }
+}
