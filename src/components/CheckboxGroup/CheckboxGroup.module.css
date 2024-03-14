@@ -1,7 +1,7 @@
-.checkbox-menu {
+.checkbox-group {
     border: 1px solid black;
 }
 
-.checkbox-group {
+.checkbox-node {
     padding-left: 1.5em;
 }
