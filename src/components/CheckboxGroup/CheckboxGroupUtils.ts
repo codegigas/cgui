@@ -7,6 +7,7 @@ import type {
 } from "./CheckboxGroupTypes";
 
 const initRecursively = <T>(items: TCheckboxItem<T>[], level: number): TInternalCheckboxItem<T>[] => {
+    level++;
     const newItems: TInternalCheckboxItem<T>[] = [];
     const itemsLength = items.length;
     for (let i = 0; i < itemsLength; ++i) {
@@ -15,7 +16,7 @@ const initRecursively = <T>(items: TCheckboxItem<T>[], level: number): TInternal
             label: currItem.label,
             value: currItem.value,
             checked: false,
-            level: level++,
+            level: level,
             indeterminate: false
         };
         if (typeof currItem.children !== "undefined") {
@@ -28,7 +29,7 @@ const initRecursively = <T>(items: TCheckboxItem<T>[], level: number): TInternal
 };
 
 const initState = <T>(items: TCheckboxItem<T>[]): TInternalCheckboxItem<T>[] => {
-    const state = initRecursively(items, 0);
+    const state = initRecursively(items, -1);
     return state;
 }
 
