@@ -1,34 +1,75 @@
-import CheckboxMenu from "./components/CheckboxMenu/CheckboxMenu";
-import { TCheckboxItem } from "./components/CheckboxMenu/CheckboxMenuTypes";
+import { useState } from "react";
+import { initState } from "./components/CheckboxGroup";
+import type { TCheckboxItem } from "./components/CheckboxGroup";
+import useCheckboxGroup from "./components/CheckboxGroup/CheckboxGroupExample";
 
-const checkboxItems: TCheckboxItem[] = [
+type Data = {
+    id: string,
+    name: string
+}
+
+const languagesAndTechnologies: TCheckboxItem<Data>[] = [
     {
-        label: "Label 1",
-        value: "",
+        label: "All",
+        value: {
+            id: "",
+            name: ""
+        },
         children: [
             {
-                label: "Label 1.1",
-                value: "1"
-            },
-            {
-                label: "Label 1.2",
-                value: "2"
-            },
-            {
-                label: "Label 1.3",
-                value: "3",
+                label: "Languages",
+                value: {
+                    id: "1",
+                    name: "Languages"
+                },
                 children: [
                     {
-                        label: "Label 1.3.1",
-                        value: "1"
-                    },
+                        label: "All",
+                        value: { 
+                            id: "", 
+                            name: "" 
+                        },
+                        children: [
+                            {
+                                label: "JavaScript",
+                                value: { 
+                                    id: "1.1", 
+                                    name: "C#" 
+                                },
+                            },
+                            {
+                                label: "TypeScript",
+                                value: { 
+                                    id: "1.2", 
+                                    name: "TypeScript" 
+                                },
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                label: "Technologies",
+                value: {
+                    id: "2",
+                    name: "Technologies"
+                },
+                children: [
                     {
-                        label: "Label 1.3.2",
-                        value: "2"
-                    },
-                    {
-                        label: "Label 1.3.3",
-                        value: "2"
+                        label: "All",
+                        value: { 
+                            id: "", 
+                            name: "" 
+                        },
+                        children: [
+                            {
+                                label: "React",
+                                value: { 
+                                    id: "2.1", 
+                                    name: "React" 
+                                },
+                            }
+                        ]
                     }
                 ]
             }
@@ -37,13 +78,17 @@ const checkboxItems: TCheckboxItem[] = [
 ];
 
 const App = () => {
+    const [state, setState] = useState(initState(languagesAndTechnologies));
+
+    const checkboxInstance = useCheckboxGroup({
+        state: state,
+        onStateChange: (newState) => setState(newState)
+    })
+
     return (
         <div className="App">
-            <CheckboxMenu
-                checkboxItems={checkboxItems}
-                levelPadding="1.5em"
-                onStateChange={(newState) => console.log(newState)}
-            />
+            {checkboxInstance.languagesElement()}
+            {checkboxInstance.technologiesElement()}
         </div>
     )
 }
