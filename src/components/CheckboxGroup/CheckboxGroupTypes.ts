@@ -14,10 +14,10 @@ type TInternalCheckboxItem<T> = {
 };
 
 type TCheckboxGroupProps<T> = {
-    checkboxItems: TCheckboxItem<T>[],
+    initialState?: TCheckboxItem<T>[],
     levelsPadding?: "0em" | "0.5em" | "1em" | "1.5em" | "2.em" | "2.5em" | "3em",
     state?: TInternalCheckboxItem<T>[],
-    onChange?: (newState: TInternalCheckboxItem<T>[]) => void,
+    onStateChange?: (newState: TInternalCheckboxItem<T>[]) => void,
 };
 
 type TSelectRecursively<T> = {

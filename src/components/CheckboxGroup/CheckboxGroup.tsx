@@ -2,18 +2,25 @@ import { useState, useEffect } from "react";
 import type { TInternalCheckboxItem, TCheckboxGroupProps } from "./CheckboxGroupTypes";
 import {
     initState,
-    traverseRecursively
+    traverseRecursively,
+    markRecursivelyWhere
 } from "./CheckboxGroupUtils";
 import Checkbox from "../Checkbox/Checkbox";
 import style from "./CheckboxGroup.module.css";
 
-const CheckboxGroup = <T,>({
-    checkboxItems,
+type TCheckboxGroup<T> = {
+    getVirtualNodes: (level: number) => TInternalCheckboxItem<T>[],
+    renderNodesRecursively: (nodes: TInternalCheckboxItem<T>[]) => JSX.Element[],
+    handleCheckboxChange: (item: TInternalCheckboxItem<T>) => void
+}
+
+const useCheckboxGroup = <T,>({
+    initialState,
     levelsPadding = "1em",
     state,
-    onChange
-}: TCheckboxGroupProps<T>) => {
-    const [internalState, setInternalState] = useState<TInternalCheckboxItem<T>[]>(state ?? initState(checkboxItems));
+    onStateChange
+}: TCheckboxGroupProps<T>): TCheckboxGroup<T> => {
+    const [internalState, setInternalState] = useState<TInternalCheckboxItem<T>[]>(state ?? initState(initialState!));
 
     const handleCheckboxChange = (item: TInternalCheckboxItem<T>) => {
         const newItems = traverseRecursively({
@@ -23,8 +30,27 @@ const CheckboxGroup = <T,>({
         setInternalState(newItems);
     };
 
-    const renderCheckboxItemsRecursively = (items: TInternalCheckboxItem<T>[]) => {
-        return items.map((item) => {
+    const getVirtualNodes = (level: number): TInternalCheckboxItem<T>[] => {
+        const vnodes: TInternalCheckboxItem<T>[] = [];
+        const traverse = (vnodes: TInternalCheckboxItem<T>[], nodes: TInternalCheckboxItem<T>[], level: number): void => {
+            const nodesLength = nodes.length;
+            for (let i = 0; i < nodesLength; ++i) {
+                const currNode = nodes[i];
+                if (currNode.level === level) {
+                    vnodes.push(currNode);
+                } else {
+                    if (typeof currNode.children !== "undefined") {
+                        traverse(vnodes, currNode.children, level);
+                    };
+                };
+            };
+        }
+        traverse(vnodes, internalState, level);
+        return vnodes;
+    }
+
+    const renderNodesRecursively = (nodes: TInternalCheckboxItem<T>[]) => {
+        return nodes.map((item) => {
             return (
                 <div
                     key={item.label}
@@ -37,7 +63,7 @@ const CheckboxGroup = <T,>({
                         indeterminate={item.indeterminate}
                         onChange={handleCheckboxChange.bind(this, item)}
                     />
-                    {item.children && renderCheckboxItemsRecursively(item.children)}
+                    {item.children && renderNodesRecursively(item.children)}
                 </div>
             );
         });
@@ -45,11 +71,11 @@ const CheckboxGroup = <T,>({
 
     // Update externall state, if such exists.
     useEffect(() => {
-        if (onChange) {
-            onChange(internalState);
+        if (onStateChange) {
+            onStateChange(internalState);
         };
     }, [internalState]);
-    
+
     // Update internal state if controlled state changes
     useEffect(() => {
         if (typeof state === "undefined") {
@@ -61,11 +87,11 @@ const CheckboxGroup = <T,>({
         setInternalState(state);
     }, [state]);
 
-    return (
-        <div className={style["checkbox-group"]}>
-            {renderCheckboxItemsRecursively(internalState)}
-        </div>
-    );
+    return {
+        getVirtualNodes: getVirtualNodes,
+        renderNodesRecursively: renderNodesRecursively,
+        handleCheckboxChange: handleCheckboxChange
+    };
 };
 
-export default CheckboxGroup;
+export { useCheckboxGroup };
