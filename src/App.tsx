@@ -24,27 +24,18 @@ const languagesAndTechnologies: TCheckboxItem<Data>[] = [
                 },
                 children: [
                     {
-                        label: "All",
+                        label: "JavaScript",
                         value: { 
-                            id: "", 
-                            name: "" 
+                            id: "1.1", 
+                            name: "C#" 
                         },
-                        children: [
-                            {
-                                label: "JavaScript",
-                                value: { 
-                                    id: "1.1", 
-                                    name: "C#" 
-                                },
-                            },
-                            {
-                                label: "TypeScript",
-                                value: { 
-                                    id: "1.2", 
-                                    name: "TypeScript" 
-                                },
-                            }
-                        ]
+                    },
+                    {
+                        label: "TypeScript",
+                        value: { 
+                            id: "1.2", 
+                            name: "TypeScript" 
+                        },
                     }
                 ]
             },
@@ -56,20 +47,11 @@ const languagesAndTechnologies: TCheckboxItem<Data>[] = [
                 },
                 children: [
                     {
-                        label: "All",
+                        label: "React",
                         value: { 
-                            id: "", 
-                            name: "" 
+                            id: "2.1", 
+                            name: "React" 
                         },
-                        children: [
-                            {
-                                label: "React",
-                                value: { 
-                                    id: "2.1", 
-                                    name: "React" 
-                                },
-                            }
-                        ]
                     }
                 ]
             }
@@ -87,8 +69,9 @@ const App = () => {
 
     return (
         <div className="App">
-            {checkboxInstance.languagesElement()}
-            {checkboxInstance.technologiesElement()}
+            {/* {checkboxInstance.languagesElement()} */}
+            {/* {checkboxInstance.technologiesElement()} */}
+            {checkboxInstance.renderElement()}
         </div>
     )
 }

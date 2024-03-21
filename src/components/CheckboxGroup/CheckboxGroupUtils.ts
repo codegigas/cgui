@@ -6,6 +6,8 @@ import type {
     TMarkRecursivelyWhere
 } from "./CheckboxGroupTypes";
 
+const noop = () => {};
+
 const initRecursively = <T>(items: TCheckboxItem<T>[], level: number): TInternalCheckboxItem<T>[] => {
     level++;
     const newItems: TInternalCheckboxItem<T>[] = [];
@@ -17,11 +19,11 @@ const initRecursively = <T>(items: TCheckboxItem<T>[], level: number): TInternal
             value: currItem.value,
             checked: false,
             level: level,
-            indeterminate: false
+            indeterminate: false,
+            handleChange: noop
         };
         if (typeof currItem.children !== "undefined") {
-            const newChildren = initRecursively(currItem.children, level);
-            newItem.children = newChildren;
+            newItem.children = initRecursively(currItem.children, level);
         };
         newItems.push(newItem);
     };
@@ -43,7 +45,8 @@ const traverseDownRecursively = <T>({ parent, items }: TSelectDownRecursively<T>
             value: currItem.value,
             checked: parent.checked,
             level: currItem.level,
-            indeterminate: false
+            indeterminate: false,
+            handleChange: noop
         };
         if (typeof currItem.children !== "undefined") {
             const newChildren = traverseDownRecursively({
@@ -70,7 +73,8 @@ const traverseRecursively = <T>({
             value: currItem.value,
             checked: currItem.checked,
             level: currItem.level,
-            indeterminate: currItem.indeterminate
+            indeterminate: currItem.indeterminate,
+            handleChange: noop
         };
 
         if (currItem === item) {
@@ -131,7 +135,8 @@ const markRecursivelyWhere = <T>({
             value: currItem.value,
             checked: currItem.checked,
             level: currItem.level,
-            indeterminate: currItem.indeterminate
+            indeterminate: currItem.indeterminate,
+            handleChange: noop
         };
 
         if (predicate(currItem)) {
