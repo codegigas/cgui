@@ -11,6 +11,7 @@ type TInternalCheckboxItem<T> = {
     checked: boolean,
     indeterminate: boolean,
     level: number,
+    handleChange: () => void
 };
 
 type TCheckboxGroupProps<T> = {
@@ -28,12 +29,12 @@ type TSelectRecursively<T> = {
 type TSelectDownRecursively<T> = {
     parent: TInternalCheckboxItem<T>,
     items: TInternalCheckboxItem<T>[]
-}
+};
 
 type TMarkRecursivelyWhere<T> = {
     items: TInternalCheckboxItem<T>[],
     predicate: (item: TInternalCheckboxItem<T>) => boolean;
-}
+};
 
 export type {
     TCheckboxItem,
